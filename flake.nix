@@ -17,7 +17,6 @@
     unpins-lib.lib.mkStandaloneFlake {
       inherit self;
       name = "zstd";
-      windows = true;
       build = pkgs:
         let
           pruned = pkgs.pkgsStatic.zstd.overrideAttrs (old: {
@@ -37,5 +36,16 @@
             aliases = [ "unzstd" "zstdcat" "zstdmt" ];
           }
           pruned;
+      # Mingw cmake build doesn't emit the unzstd/zstdcat/zstdmt symlinks
+      # that the unix install adds, so nothing to prune — just embed the
+      # multicall aliases as UNPIN_META.
+      windowsBuild = pkgs:
+        let cross = unpins-lib.lib.mingwStaticCross pkgs; in
+        unpins-lib.lib.withAliases pkgs
+          {
+            primary = "zstd.exe";
+            aliases = [ "unzstd" "zstdcat" "zstdmt" ];
+          }
+          cross.zstd;
     };
 }
