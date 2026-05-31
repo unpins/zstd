@@ -43,3 +43,7 @@ The first invocation will offer to add the [unpins.cachix.org](https://unpins.ca
 ## Manual download
 
 The [Releases](https://github.com/unpins/zstd/releases) page has standalone binaries for manual download.
+
+## Man pages
+
+The man pages for the shipped commands — `zstd`, `unzstd`, `zstdcat` — are embedded in the binary; read one with `unpin man zstd`, e.g. `unpin man zstd unzstd`. The pages for the shell-script wrappers (`zstdgrep`, `zstdless`) are dropped, since this package ships only `zstd` and its multicall aliases. (`zstdmt` has no upstream man page — it's `zstd` in multi-threaded mode.)
