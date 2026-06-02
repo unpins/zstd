@@ -15,12 +15,13 @@
   # dispatch links.
   outputs = { self, unpins-lib }:
     let
-      # Windows man is grafted from nixpkgs (the mingw cross can't run the
-      # man-page generator), and `name = "zstd"` resolves the graft to
-      # nixpkgs' zstd.man — which carries pages for the zstdgrep/zstdless
-      # shell scripts we don't ship. Pin a curated 3-page tree via
-      # winManRoot (the native side curates its own share/man in
-      # postInstall). zstdmt has no upstream man page.
+      # Windows man fallback case: zstd's cmake build installs no man on the
+      # mingw cross (the man install is gated on UNIX, false for mingw), so the
+      # windows .exe can't harvest its own man the way every other target does.
+      # nixpkgs' x86_64 zstd.man carries 5 pages (incl. the zstdgrep/zstdless
+      # shell scripts we don't ship), so pin a curated 3-page tree via
+      # winManRoot rather than fall back to the full graft. The native side
+      # curates its own share/man in postInstall. zstdmt has no upstream page.
       pkgsX = unpins-lib.inputs.nixpkgs.legacyPackages.x86_64-linux;
       winMan = pkgsX.runCommand "zstd-win-man" { } ''
         mkdir -p "$out/share/man/man1"
