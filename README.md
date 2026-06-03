@@ -47,4 +47,4 @@ The [Releases](https://github.com/unpins/zstd/releases) page has standalone bina
 
 ## Man pages
 
-The man pages for the shipped commands — `zstd`, `unzstd`, `zstdcat` — are embedded in the binary; read one with `unpin man zstd`, e.g. `unpin man zstd unzstd`. The pages for the shell-script wrappers (`zstdgrep`, `zstdless`) are dropped, since this package ships only `zstd` and its multicall aliases. (`zstdmt` has no upstream man page — it's `zstd` in multi-threaded mode.)
+The man pages for the shipped commands — `zstd`, `unzstd`, `zstdcat` — are embedded in the binary; read one with `unpin man zstd`, e.g. `unpin man zstd unzstd`. The pages for the shell-script wrappers (`zstdgrep`, `zstdless`) are dropped, since this package ships only `zstd` and its aliases. (`zstdmt` has no upstream man page — it's `zstd` in multi-threaded mode.)
