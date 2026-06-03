@@ -9,21 +9,22 @@ Standalone build of [zstd](https://github.com/facebook/zstd).
 
 Part of the [unpins](https://unpins.org) project — native single-binary builds with no third-party runtime dependencies.
 
-## Installation
+## Usage
 
-Install with [unpin](https://github.com/unpins/unpin):
-
-```bash
-unpin zstd
-```
-
-Or run without installing:
+Run the `zstd` program with [unpin](https://github.com/unpins/unpin):
 
 ```bash
-unpin run zstd
+unpin zstd -19 file     # compress -> file.zst
+unpin zstd -d file.zst  # decompress
 ```
 
-`unpin install` creates the multicall aliases (`unzstd`, `zstdcat`, `zstdmt`) alongside `zstd`. Each alias dispatches via `argv[0]` to the same binary.
+To install it onto your PATH:
+
+```bash
+unpin install zstd
+```
+
+Installing also creates the `unzstd`, `zstdcat`, `zstdmt` commands.
 
 ## Build locally
 
