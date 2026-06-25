@@ -33,6 +33,12 @@
     unpins-lib.lib.mkStandaloneFlake {
       inherit self;
       name = "zstd";
+
+      # Build via the unpin-llvm engine + emit a bitcode multicall module.
+      engine = "unpin-llvm";
+      multicall = {
+        programs = [{ name = "zstd"; aliases = [ "unzstd" "zstdcat" "zstdmt" ]; }];
+      };
       winManRoot = winMan;
       build = pkgs:
         let
