@@ -63,22 +63,11 @@
             '';
           });
         in
-        unpins-lib.lib.withAliases pkgs
-          {
-            primary = "zstd";
-            aliases = [ "unzstd" "zstdcat" "zstdmt" ];
-          }
-          pruned;
+        pruned;
       # Mingw cmake build doesn't emit the unzstd/zstdcat/zstdmt symlinks
-      # that the unix install adds, so nothing to prune — just embed the
-      # multicall aliases as UNPIN_META.
+      # that the unix install adds, so nothing to prune here.
       windowsBuild = pkgs:
         let cross = unpins-lib.lib.mingwStaticCross pkgs; in
-        unpins-lib.lib.withAliases pkgs
-          {
-            primary = "zstd.exe";
-            aliases = [ "unzstd" "zstdcat" "zstdmt" ];
-          }
-          cross.zstd;
+        cross.zstd;
     };
 }
