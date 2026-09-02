@@ -19,16 +19,25 @@
       # mingw cross (the man install is gated on UNIX, false for mingw), so the
       # windows .exe can't harvest its own man the way every other target does.
       # nixpkgs' x86_64 zstd.man carries 5 pages (incl. the zstdgrep/zstdless
-      # shell scripts we don't ship), so pin a curated 3-page tree via
-      # winManRoot rather than fall back to the full graft. The native side
-      # curates its own share/man in postInstall. zstdmt has no upstream page.
+      # shell scripts we don't ship), so pin a curated tree via winManRoot
+      # rather than fall back to the full graft. The native side curates its
+      # own share/man in postInstall.
       pkgsX = unpins-lib.inputs.nixpkgs.legacyPackages.x86_64-linux;
       winMan = pkgsX.runCommand "zstd-win-man" { } ''
         mkdir -p "$out/share/man/man1"
         for p in zstd unzstd zstdcat; do
           zcat ${pkgsX.zstd.man}/share/man/man1/$p.1.gz > "$out/share/man/man1/$p.1"
         done
+        ${zstdmtStub}
       '';
+      # `zstdmt` is the third alias of the same binary and `zstd.1` documents it
+      # by name — its NAME line reads "zstd, zstdmt, unzstd, zstdcat" and the
+      # body says `zstdmt` is `zstd -T0`. Upstream's install creates the zstdmt
+      # BINARY link (programs/Makefile:419) and the unzstd.1/zstdcat.1 man links
+      # (:424-425), then stops without the third — the same dangling-line slip
+      # that cost procps-ng its `pkill.1`. This file used to say zstdmt had no
+      # upstream page; it has one, under another name.
+      zstdmtStub = ''printf '.so man1/zstd.1\n' > "$out/share/man/man1/zstdmt.1"'';
     in
     unpins-lib.lib.mkStandaloneFlake {
       inherit self;
@@ -54,12 +63,14 @@
                 fi
                 # Curate man to the shipped commands: zstd + the unzstd/
                 # zstdcat/zstdmt aliases. Drop the shell-script pages
-                # (zstdgrep, zstdless) we don't carry; zstdmt has no
-                # upstream page. Otherwise withMan embeds all 5.
+                # (zstdgrep, zstdless) we don't carry. Otherwise withMan embeds
+                # all 5. zstdmt's stub is written after the prune — see
+                # zstdmtStub above for why it is written at all.
                 if [ -d "$d/share/man/man1" ]; then
                   find "$d/share/man/man1" -mindepth 1 -maxdepth 1 \
                     ! -name 'zstd.1*' ! -name 'unzstd.1*' ! -name 'zstdcat.1*' \
                     -delete
+                  printf '.so man1/zstd.1\n' > "$d/share/man/man1/zstdmt.1"
                 fi
               done
             '';
