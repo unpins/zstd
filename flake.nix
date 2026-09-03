@@ -53,7 +53,19 @@
       winManRoot = winMan;
       build = pkgs:
         let
-          pruned = pkgs.pkgsStatic.zstd.overrideAttrs (old: {
+          base = pkgs.pkgsStatic.zstd;
+          runTests = base.stdenv.buildPlatform.canExecute base.stdenv.hostPlatform;
+          pruned = base.overrideAttrs (old: {
+            doCheck = runTests;
+            # doCheck alone runs ctest against a build that registered no
+            # tests ("No tests were found!!!") — the cmake project only adds
+            # them under this flag. With it, `playTests` drives the CLI
+            # through its functional suite and passes under static-musl. Tied
+            # to `runTests` and not set unconditionally: on the crosses the
+            # suite cannot run anyway, and building test binaries that nothing
+            # executes is cost and cross-risk for nothing.
+            cmakeFlags = (old.cmakeFlags or [ ])
+              ++ pkgs.lib.optionals runTests [ "-DZSTD_BUILD_TESTS=ON" ];
             postInstall = (old.postInstall or "") + "\n" + ''
               for o in $outputs; do
                 d="''${!o}"
