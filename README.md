@@ -51,7 +51,7 @@ The [Releases](https://github.com/unpins/zstd/releases) page has standalone bina
 ## Build notes
 
 - **Multicall:** one `zstd` binary; `unzstd`/`zstdcat`/`zstdmt` are `argv[0]`-dispatch aliases (`unpin install zstd` creates the command names). The shell-script wrappers (`zstdgrep`/`zstdless`) are dropped under the single-binary policy.
-- **Windows:** a single `zstd.exe` targeting the mingw-w64 runtime — no companion DLLs.
+- **Windows:** built with mingw-w64.
 - **Man pages:** the `zstd`/`unzstd`/`zstdcat` pages are embedded; read with `unpin man zstd`.
 - **Tests:** the CMake build zstd is packaged from has testing disabled (`ctest` finds no tests), and zstd's real suite (`tests/playTests.sh` + the fuzzers) is Makefile-based and not available through this derivation, so no native suite is wired. The release smoke test exercises a compress/decompress round-trip.
 
