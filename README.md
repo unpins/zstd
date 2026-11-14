@@ -28,7 +28,8 @@ Installing also creates the `unzstd`, `zstdcat`, `zstdmt` commands.
 
 ## Man pages
 
-The man pages for the shipped commands — `zstd`, `unzstd`, `zstdcat` — are embedded in the binary; read one with `unpin man zstd`, e.g. `unpin man zstd unzstd`. The pages for the shell-script wrappers (`zstdgrep`, `zstdless`) are dropped, since this package ships only `zstd` and its aliases. (`zstdmt` has no upstream man page — it's `zstd` in multi-threaded mode.)
+The man pages for the shipped commands — `zstd`, `unzstd`, `zstdcat`, `zstdmt` — are embedded in the binary; read one with `unpin man zstd`, e.g. `unpin man zstd unzstd`. The pages for the shell-script wrappers (`zstdgrep`, `zstdless`) are dropped, since this package ships only `zstd` and its aliases.
+
 ## Build locally
 
 ```bash
@@ -52,6 +53,6 @@ The [Releases](https://github.com/unpins/zstd/releases) page has standalone bina
 
 - **Multicall:** one `zstd` binary; `unzstd`/`zstdcat`/`zstdmt` are `argv[0]`-dispatch aliases (`unpin install zstd` creates the command names). The shell-script wrappers (`zstdgrep`/`zstdless`) are dropped under the single-binary policy.
 - **Windows:** built with mingw-w64.
-- **Man pages:** the `zstd`/`unzstd`/`zstdcat` pages are embedded; read with `unpin man zstd`.
-- **Tests:** the CMake build zstd is packaged from has testing disabled (`ctest` finds no tests), and zstd's real suite (`tests/playTests.sh` + the fuzzers) is Makefile-based and not available through this derivation, so no native suite is wired. The release smoke test exercises a compress/decompress round-trip.
-
+- **Man pages:** the `zstd`/`unzstd`/`zstdcat`/`zstdmt` pages are embedded; read with `unpin man zstd`.
+- **Not included:** compressing to or reading gzip, xz, lzma and lz4 (`--format=gzip|xz|lzma|lz4`), and decoding frames older than format v0.8 (zstd v0.5–v0.7). The nixpkgs build leaves all of them off.
+- **Tests:** upstream's `playTests` suite runs during the build on the targets the build machine can execute (the native Linux and macOS builds, and Linux i686). Windows and the other cross targets get the `--version` smoke test only.
