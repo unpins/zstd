@@ -33,8 +33,8 @@
       # `zstdmt` is the third alias of the same binary and `zstd.1` documents it
       # by name — its NAME line reads "zstd, zstdmt, unzstd, zstdcat" and the
       # body says `zstdmt` is `zstd -T0`. Upstream's install creates the zstdmt
-      # BINARY link (programs/Makefile:419) and the unzstd.1/zstdcat.1 man links
-      # (:424-425), then stops without the third — the same dangling-line slip
+      # BINARY link (build/cmake/programs/CMakeLists.txt:98-99) and the
+      # unzstd.1/zstdcat.1 man links (:66-67), then stops without the third — the same dangling-line slip
       # that cost procps-ng its `pkill.1`. This file used to say zstdmt had no
       # upstream page; it has one, under another name.
       zstdmtStub = ''printf '.so man1/zstd.1\n' > "$out/share/man/man1/zstdmt.1"'';
